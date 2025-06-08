@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login SoundRights</title>
+  <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+  <h2>Iniciar sesión</h2>
+  <form id="loginForm" autocomplete="off">
+    <input type="hidden" id="userId" value="1" />
+    <button type="submit">Entrar como Usuario 1</button>
+  </form>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Simula login guardando el userId en localStorage
+      localStorage.setItem('userId', document.getElementById('userId').value);
+      window.location.href = '/main';
+    });
+  </script>
+</body>
+</html>
