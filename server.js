@@ -2,22 +2,41 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
+const session = require('express-session');
 const ChatService = require('./Business/ChatService.js');
-
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const chatService = new ChatService();
-const chatRoutes = require('./routes/chat.routes.js');
-app.use('/chat', chatRoutes);
+// Middleware para parsear formularios y JSON
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
+// Configuración de sesión (¡importante para login!)
+app.use(session({
+  secret: 'soundrights-secret', // Cambia esto en producción
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Rutas
+const chatRoutes = require('./routes/chat.routes.js');
+const userRoutes = require('./routes/user.routes.js');
+
+app.use('/chat', chatRoutes);
+app.use('/', userRoutes);
+
+// Ruta raíz (puedes cambiar a main o login si prefieres)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'chat.html'));
+  res.redirect('/login');
 });
+
+// --- CHAT SOCKET.IO (NO TOCAR) ---
+const chatService = new ChatService();
 
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
@@ -39,17 +58,9 @@ io.on('connection', (socket) => {
     });
 });
 
+// --- FIN CHAT SOCKET.IO ---
+
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
-});
-
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views/login.html'));
-});
-app.get('/main', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views/main.html'));
-});
-app.get('/chat', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views/chat.html'));
 });
