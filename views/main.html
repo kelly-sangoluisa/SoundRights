@@ -6,18 +6,38 @@
   <link rel="stylesheet" href="/login.css">
 </head>
 <body>
-  <h2>Bienvenido, Usuario 1</h2>
+  <h2 id="welcome-message">Bienvenido</h2>
   <button id="goChat">Chatear con Usuario 2</button>
+  <button id="logoutBtn">Cerrar sesión</button>
   <script>
-    // Verifica si hay login
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      window.location.href = '/login';
-    }
+    // Verifica sesión y muestra el nombre real
+    fetch('/current-user')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.user) {
+          document.getElementById('welcome-message').textContent =
+            `¡Bienvenido, ${data.user.name_user}!`;
+          // Guarda el id del usuario logueado para el chat
+          window.userId = data.user.id_user;
+        } else {
+          window.location.href = '/login';
+        }
+      });
+
     document.getElementById('goChat').addEventListener('click', function() {
-      // Redirige al chat con el usuario 2
-      window.location.href = '/chat?receiver=2';
+      // Redirige al historial de chat entre el usuario logueado y el usuario 2
+      // Esto coincide con la ruta: /chat/history/:userA/:userB
+      if (window.userId) {
+        window.location.href = `/chat/history/${window.userId}/2`;
+      } else {
+        alert('No se pudo obtener el usuario logueado.');
+      }
     });
+
+    document.getElementById('logoutBtn').onclick = async () => {
+      await fetch('/logout', { method: 'POST' });
+      window.location.href = '/login';
+    };
   </script>
 </body>
 </html>
