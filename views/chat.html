@@ -12,19 +12,18 @@
     <button>Enviar</button>
   </form>
   <script>
-  // Lee el userId del login y el receiverId de la URL
-  function getReceiverId() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('receiver');
-  }
-  window.userId = localStorage.getItem('userId');
-  window.receiverId = getReceiverId();
-  if (!window.userId || !window.receiverId) {
-    window.location.href = '/login';
-  }
-</script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="/script.js"></script>
-
+    // Obtiene el receiver de la URL
+    function getReceiverId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('receiver');
+    }
+    window.receiverId = getReceiverId();
+    if (!window.receiverId) {
+      alert('No se encontró el usuario receptor.');
+      window.location.href = '/main';
+    }
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/script.js"></script>
 </body>
 </html>
