@@ -58,6 +58,14 @@ io.on('connection', (socket) => {
     });
 });
 
+app.get('/chat', (req, res) => {
+  if (!req.session || !req.session.user) {
+    return res.redirect('/login');
+  }
+  res.sendFile(path.join(__dirname, 'views/chat.html'));
+});
+
+
 // --- FIN CHAT SOCKET.IO ---
 
 const PORT = process.env.PORT || 3000;
