@@ -46,6 +46,7 @@
           <th>ID Usuario</th>
           <th>Título de la Canción</th>
           <th>Archivo</th>
+          <th>Acción</th> <!-- Nueva columna -->
         </tr>
       </thead>
       <tbody id="songs-table-body">
@@ -245,16 +246,22 @@
                     ? `<a href="${song.file_url_song}" target="_blank">Ver archivo</a>`
                     : '<span style="color:#b0c3ce;">Sin archivo</span>'}
                 </td>
+                <td>
+                  <button class="buy-btn" onclick="comprarCancion(${song.id_song}, '${song.title_song.replace(/'/g, "\\'")}')">Comprar</button>
+                </td>
               </tr>
             `).join('');
           } else {
-            tbody.innerHTML = '<tr><td colspan="4">No hay canciones disponibles.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5">No hay canciones disponibles.</td></tr>';
           }
         })
         .catch(() => {
           document.getElementById('songs-table-body').innerHTML =
-            '<tr><td colspan="4">Error al cargar canciones.</td></tr>';
+            '<tr><td colspan="5">Error al cargar canciones.</td></tr>';
         });
+      window.comprarCancion = function(id, titulo) {
+        alert(`Comprar canción: ${titulo} (ID: ${id})`);
+      };
     });
   </script>
 </body>
