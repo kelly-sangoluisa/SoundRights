@@ -4,14 +4,34 @@ const form = document.getElementById('form');
 const input = document.getElementById('input');
 const messages = document.getElementById('messages');
 
-const sender = window.userId;
+let sender = null;
 const receiver = window.receiverId;
 
-// Cargar historial al iniciar
+console.log('Valor inicial de receiver:', receiver);
+
+// Obtiene el usuario logueado y luego carga el historial
+async function getSender() {
+  console.log('Llamando a /me para obtener el usuario logueado...');
+  const res = await fetch('/me', { credentials: 'include' });
+  const data = await res.json();
+  console.log('Datos recibidos de /me:', data);
+  if (data.success) {
+    sender = data.user.id_user;
+    console.log('Sender obtenido:', sender);
+    loadHistory(); // solo carga historial cuando ya tienes el sender
+  } else {
+    alert('No se pudo obtener el usuario logueado.');
+    window.location.href = '/login';
+  }
+}
+
+// Cargar historial entre sender y receiver
 async function loadHistory() {
   if (sender && receiver) {
+    console.log(`Cargando historial entre sender=${sender} y receiver=${receiver}`);
     const res = await fetch(`/chat/history/${sender}/${receiver}`);
     const history = await res.json();
+    console.log('Historial recibido:', history);
     messages.innerHTML = '';
     history.forEach(msg => {
       const item = document.createElement('li');
@@ -22,8 +42,10 @@ async function loadHistory() {
   }
 }
 
-window.addEventListener('DOMContentLoaded', loadHistory);
+// Solo ejecuta getSender al cargar la página
+window.addEventListener('DOMContentLoaded', getSender);
 
+// Enviar mensaje por socket
 form.addEventListener('submit', function(e) {
   e.preventDefault();
   if (input.value && sender && receiver) {
@@ -36,6 +58,7 @@ form.addEventListener('submit', function(e) {
   }
 });
 
+// Recibir mensaje en tiempo real
 socket.on('chat message', function(msg) {
   // Solo muestra el mensaje si es entre estos dos usuarios
   if (
