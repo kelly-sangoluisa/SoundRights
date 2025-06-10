@@ -26,9 +26,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Rutas
 const chatRoutes = require('./routes/chat.routes.js');
 const userRoutes = require('./routes/user.routes.js');
+const songRoutes = require('./routes/song.routes.js'); // <-- agrega esto
 
 app.use('/chat', chatRoutes);
 app.use('/', userRoutes);
+app.use('/api', songRoutes); // <-- y esto
 
 // Ruta raíz (puedes cambiar a main o login si prefieres)
 app.get('/', (req, res) => {
