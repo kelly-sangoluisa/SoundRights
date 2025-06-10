@@ -222,7 +222,7 @@
 
       // Cargar todas las licencias de la base de datos
       function loadAllLicenses() {
-        fetch(`/api/licenses`)
+        fetch(`/api/licenses/requester/${userId}`)
           .then(res => res.json())
           .then(data => {
             const tbody = document.getElementById('my-licenses-table-body');
@@ -238,9 +238,9 @@
                     <td>${lic.date_end_license ? lic.date_end_license.substring(0,10) : ''}</td>
                   </tr>
                 `).join('')
-                : '<tr><td colspan="6">No hay licencias registradas.</td></tr>';
+                : '<tr><td colspan="6">No tienes licencias registradas.</td></tr>';
             } else {
-              tbody.innerHTML = '<tr><td colspan="6">No hay licencias registradas.</td></tr>';
+              tbody.innerHTML = '<tr><td colspan="6">No tienes licencias registradas.</td></tr>';
             }
           });
       }
