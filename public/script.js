@@ -35,9 +35,16 @@ async function loadHistory() {
     messages.innerHTML = '';
     history.forEach(msg => {
       const item = document.createElement('li');
-      item.textContent = `[${msg.sender} → ${msg.receiver}]: ${msg.content}`;
+      item.textContent = msg.content;
+
+      // Si el mensaje fue enviado por mí, agregamos la clase 'self'
+      if (msg.sender == sender) {
+        item.classList.add('self');
+      }
+
       messages.appendChild(item);
     });
+
     window.scrollTo(0, document.body.scrollHeight);
   }
 }
@@ -46,7 +53,7 @@ async function loadHistory() {
 window.addEventListener('DOMContentLoaded', getSender);
 
 // Enviar mensaje por socket
-form.addEventListener('submit', function(e) {
+form.addEventListener('submit', function (e) {
   e.preventDefault();
   if (input.value && sender && receiver) {
     socket.emit('chat message', {
@@ -58,16 +65,34 @@ form.addEventListener('submit', function(e) {
   }
 });
 
+
 // Recibir mensaje en tiempo real
-socket.on('chat message', function(msg) {
+socket.on('chat message', function (msg) {
   // Solo muestra el mensaje si es entre estos dos usuarios
   if (
     (msg.sender == sender && msg.receiver == receiver) ||
     (msg.sender == receiver && msg.receiver == sender)
   ) {
     const item = document.createElement('li');
-    item.textContent = `[${msg.sender} → ${msg.receiver}]: ${msg.content}`;
+
+    // Agrega el contenido del mensaje
+    item.textContent = msg.content;
+
+    // Si el mensaje fue enviado por mí, alinearlo a la derecha
+    if (msg.sender === sender) {
+      item.classList.add('self');
+    }
+
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
   }
 });
+
+
+const li = document.createElement("li");
+li.textContent = msg.content;
+if (msg.senderId === myUserId) {
+  li.classList.add("self");
+}
+messages.appendChild(li);
+

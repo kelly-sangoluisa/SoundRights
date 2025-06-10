@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Chat SoundRights</title>
   <link rel="stylesheet" href="/chat.css">
 </head>
+
 <body>
-  <ul id="messages"></ul>
-  <form id="form" autocomplete="off">
-    <input id="input" autocomplete="off" placeholder="Escribe tu mensaje..." required />
-    <button>Enviar</button>
-  </form>
+  <div class="chat-container">
+    <div id="chat-header">
+      <button id="btn-back">Regresar</button>
+      <div id="chat-title">Chat con [Nombre o Canción]</div>
+      <button id="btn-derechos">🎁 Dar derechos</button>
+    </div>
+
+    <ul id="messages"></ul>
+    <form id="form" autocomplete="off">
+      <input id="input" autocomplete="off" placeholder="Escribe tu mensaje..." required />
+      <button>Enviar</button>
+    </form>
+  </div>
   <script>
     // Obtiene el receiver de la URL
     function getReceiverId() {
@@ -22,8 +32,15 @@
       alert('No se encontró el usuario receptor.');
       window.location.href = '/main';
     }
+
+    document.getElementById('chat-title').textContent = `Chat con ${window.receiverName}`;
+    document.getElementById('btn-back').addEventListener('click', () => {
+      window.location.href = '/main'; // Cambia esta ruta si es necesario
+    });
+
   </script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/script.js"></script>
 </body>
+
 </html>
