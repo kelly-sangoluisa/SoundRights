@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Main SoundRights</title>
+  <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+  <h2>Bienvenido, Usuario 1</h2>
+  <button id="goChat">Chatear con Usuario 2</button>
+  <script>
+    // Verifica si hay login
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      window.location.href = '/login';
+    }
+    document.getElementById('goChat').addEventListener('click', function() {
+      // Redirige al chat con el usuario 2
+      window.location.href = '/chat?receiver=2';
+    });
+  </script>
+</body>
+</html>

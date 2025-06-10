@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat SoundRights</title>
+  <link rel="stylesheet" href="/chat.css">
+</head>
+<body>
+  <ul id="messages"></ul>
+  <form id="form" autocomplete="off">
+    <input id="input" autocomplete="off" placeholder="Escribe tu mensaje..." required />
+    <button>Enviar</button>
+  </form>
+  <script>
+  // Lee el userId del login y el receiverId de la URL
+  function getReceiverId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('receiver');
+  }
+  window.userId = localStorage.getItem('userId');
+  window.receiverId = getReceiverId();
+  if (!window.userId || !window.receiverId) {
+    window.location.href = '/login';
+  }
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/script.js"></script>
+
+</body>
+</html>

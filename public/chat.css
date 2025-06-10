@@ -1,0 +1,61 @@
+/* Puedes pegar esto en login.css o chat.css */
+body {
+  background: #f7f4eb; /* color5 */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#messages {
+  list-style: none;
+  padding: 20px;
+  margin: 0;
+  background: #dedbd8; /* color4 */
+  min-height: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #b0c3ce;
+}
+
+#messages li {
+  background: #b0c3ce; /* color3 */
+  color: #5581a4;      /* color1 */
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  max-width: 70%;
+  word-break: break-word;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+#input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #6b91ac; /* color2 */
+  border-radius: 6px 0 0 6px;
+  outline: none;
+  font-size: 16px;
+  background: #f7f4eb; /* color5 */
+  color: #5581a4;      /* color1 */
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background: #6b91ac; /* color2 */
+  color: #fff;
+  border-radius: 0 6px 6px 0;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #5581a4; /* color1 */
+}
