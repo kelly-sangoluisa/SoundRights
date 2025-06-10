@@ -90,6 +90,8 @@ router.get('/me', (req, res) => {
     return res.status(401).json({ success: false, message: 'No autenticado' });
   }
   res.json({ success: true, user: req.session.user });
+});
+
 // Ruta para obtener el usuario actual de la sesión
 router.get('/current-user', (req, res) => {
   if (req.session && req.session.user) {
