@@ -65,7 +65,6 @@ form.addEventListener('submit', function (e) {
   }
 });
 
-
 // Recibir mensaje en tiempo real
 socket.on('chat message', function (msg) {
   // Solo muestra el mensaje si es entre estos dos usuarios
@@ -74,12 +73,10 @@ socket.on('chat message', function (msg) {
     (msg.sender == receiver && msg.receiver == sender)
   ) {
     const item = document.createElement('li');
-
-    // Agrega el contenido del mensaje
     item.textContent = msg.content;
 
     // Si el mensaje fue enviado por mí, alinearlo a la derecha
-    if (msg.sender === sender) {
+    if (msg.sender == sender) {
       item.classList.add('self');
     }
 
@@ -87,12 +84,3 @@ socket.on('chat message', function (msg) {
     window.scrollTo(0, document.body.scrollHeight);
   }
 });
-
-
-const li = document.createElement("li");
-li.textContent = msg.content;
-if (msg.senderId === myUserId) {
-  li.classList.add("self");
-}
-messages.appendChild(li);
-
