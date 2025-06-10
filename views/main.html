@@ -3,34 +3,259 @@
 <head>
   <meta charset="UTF-8">
   <title>Main SoundRights</title>
-  <link rel="stylesheet" href="/login.css">
+  <link rel="stylesheet" href="/dashboard.css">
+  <link rel="stylesheet" href="/modal.css">
 </head>
 <body>
-  <h2 id="welcome-message">Bienvenido</h2>
-  <button id="goChat">Chatear con Usuario 2</button>
-  <button id="logoutBtn">Cerrar sesión</button>
+  <header>
+    <div class="header-content">
+      <h1>Dashboard SoundRights</h1>
+      <div class="header-actions">
+        <span id="welcome-message" class="welcome-message"></span>
+        <button id="goChat" class="icon-btn" title="Revisar mensajes" aria-label="Revisar mensajes">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M4 4h16v12H5.17L4 17.17V4z" stroke="#5581a4" stroke-width="2" fill="#b0c3ce"/>
+            <circle cx="8" cy="10" r="1" fill="#5581a4"/>
+            <circle cx="12" cy="10" r="1" fill="#5581a4"/>
+            <circle cx="16" cy="10" r="1" fill="#5581a4"/>
+          </svg>
+        </button>
+        <button id="logoutBtn" class="icon-btn" title="Cerrar sesión" aria-label="Cerrar sesión">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M16 17l5-5-5-5" stroke="#5581a4" stroke-width="2" fill="none"/>
+            <path d="M21 12H9" stroke="#5581a4" stroke-width="2" fill="none"/>
+            <path d="M5 19V5a2 2 0 012-2h6" stroke="#5581a4" stroke-width="2" fill="none"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Botones debajo del header alineados a la izquierda -->
+  <div class="dashboard-actions">
+    <button class="action-btn">Canciones</button>
+    <button class="action-btn">Derechos adquiridos</button>
+  </div>
+
+  <!-- Tabla de canciones de la base de datos -->
+  <div class="songs-table-container">
+    <table class="songs-table">
+      <thead>
+        <tr>
+          <th>ID Canción</th>
+          <th>ID Usuario</th>
+          <th>Título de la Canción</th>
+          <th>Archivo</th>
+        </tr>
+      </thead>
+      <tbody id="songs-table-body">
+        <!-- Las filas se llenarán dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal para CRUD de canciones del usuario logueado -->
+  <div id="songsModal" class="modal">
+    <div class="modal-content">
+      <button class="close-modal" id="closeSongsModal" title="Cerrar">&times;</button>
+      <h2>Mis Canciones</h2>
+      <form id="songForm" class="modal-form">
+        <input type="text" id="songTitle" placeholder="Título de la canción" required />
+        <input type="text" id="songFileUrl" placeholder="URL del archivo" />
+        <button type="submit">Agregar</button>
+      </form>
+      <table class="modal-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Archivo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="my-songs-table-body">
+          <!-- Canciones del usuario logueado -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal para editar canción -->
+  <div id="editSongModal" class="modal">
+    <div class="modal-content">
+      <button class="close-modal" id="closeEditSongModal" title="Cerrar">&times;</button>
+      <h2>Editar Canción</h2>
+      <form id="editSongForm" class="modal-form">
+        <input type="hidden" id="editSongId" />
+        <input type="text" id="editSongTitle" placeholder="Título de la canción" required />
+        <input type="text" id="editSongFileUrl" placeholder="URL del archivo" />
+        <button type="submit">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+
   <script>
-    // Verifica sesión y muestra el nombre real
-    fetch('/me', { credentials: 'include' })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.user) {
-          document.getElementById('welcome-message').textContent =
-            `¡Bienvenido, ${data.user.name_user}!`;
+    let userId = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verifica sesión y muestra el nombre real
+      fetch('/current-user')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.user) {
+            const nombreCompleto = data.user.name_user;
+            const primerNombre = nombreCompleto.split(' ')[0];
+            document.getElementById('welcome-message').textContent =
+              `¡Bienvenido, ${primerNombre}!`;
+            userId = data.user.id_user;
+          } else {
+            window.location.href = '/login';
+          }
+        });
+
+      document.getElementById('goChat').addEventListener('click', function() {
+        if (userId) {
+          window.location.href = `/chat/history/${userId}/2`;
         } else {
-          window.location.href = '/login';
+          alert('No se pudo obtener el usuario logueado.');
         }
       });
 
-    document.getElementById('goChat').addEventListener('click', function() {
-      // Redirige al chat con el usuario 2
-      window.location.href = `/chat?receiver=2`;
-    });
+      document.getElementById('logoutBtn').onclick = async () => {
+        await fetch('/logout', { method: 'POST' });
+        window.location.href = '/login';
+      };
 
-    document.getElementById('logoutBtn').onclick = async () => {
-      await fetch('/logout', { method: 'POST', credentials: 'include' });
-      window.location.href = '/login';
-    };
+      // Mostrar modal de "Mis Canciones"
+      const songsModal = document.getElementById('songsModal');
+      const mySongsBtn = document.querySelector('.dashboard-actions .action-btn');
+      mySongsBtn.textContent = "Mis Canciones";
+      mySongsBtn.onclick = () => {
+        songsModal.classList.add('active');
+        loadMySongs();
+      };
+      document.getElementById('closeSongsModal').onclick = () => {
+        songsModal.classList.remove('active');
+      };
+      window.onclick = function(event) {
+        if (event.target === songsModal) {
+          songsModal.classList.remove('active');
+        }
+        if (event.target === editSongModal) {
+          editSongModal.classList.remove('active');
+        }
+      };
+
+      // Modal de edición
+      const editSongModal = document.getElementById('editSongModal');
+      document.getElementById('closeEditSongModal').onclick = () => {
+        editSongModal.classList.remove('active');
+      };
+
+      // CRUD: Cargar solo las canciones del usuario logueado en el modal
+      function loadMySongs() {
+        fetch('/api/songs')
+          .then(res => res.json())
+          .then(data => {
+            const tbody = document.getElementById('my-songs-table-body');
+            if (data.success && Array.isArray(data.songs)) {
+              const mySongs = data.songs.filter(song => song.id_user == userId);
+              tbody.innerHTML = mySongs.length > 0
+                ? mySongs.map(song => `
+                  <tr>
+                    <td>${song.id_song}</td>
+                    <td>${song.title_song}</td>
+                    <td>
+                      ${song.file_url_song
+                        ? `<a href="${song.file_url_song}" target="_blank">Ver archivo</a>`
+                        : '<span style="color:#b0c3ce;">Sin archivo</span>'}
+                    </td>
+                    <td>
+                      <button class="crud-btn" onclick="editSong(${song.id_song}, '${song.title_song.replace(/'/g, "\\'")}', '${(song.file_url_song || '').replace(/'/g, "\\'")}')">Editar</button>
+                      <button class="crud-btn" onclick="deleteSong(${song.id_song})">Eliminar</button>
+                    </td>
+                  </tr>
+                `).join('')
+                : '<tr><td colspan="4">No tienes canciones registradas.</td></tr>';
+            } else {
+              tbody.innerHTML = '<tr><td colspan="4">No tienes canciones registradas.</td></tr>';
+            }
+          });
+      }
+
+      // Crear nueva canción (solo para el usuario logueado)
+      document.getElementById('songForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const title = document.getElementById('songTitle').value.trim();
+        const fileUrl = document.getElementById('songFileUrl').value.trim();
+        if (!title) return;
+        await fetch('/api/songs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_user: userId, title_song: title, file_url_song: fileUrl })
+        });
+        this.reset();
+        loadMySongs();
+      };
+
+      // Editar canción (abre modal de edición)
+      window.editSong = function(id, title, fileUrl) {
+        document.getElementById('editSongId').value = id;
+        document.getElementById('editSongTitle').value = title;
+        document.getElementById('editSongFileUrl').value = fileUrl;
+        editSongModal.classList.add('active');
+      };
+
+      // Guardar cambios de edición
+      document.getElementById('editSongForm').onsubmit = function(e) {
+        e.preventDefault();
+        const id = document.getElementById('editSongId').value;
+        const newTitle = document.getElementById('editSongTitle').value.trim();
+        const newFileUrl = document.getElementById('editSongFileUrl').value.trim();
+        fetch(`/api/songs/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_user: userId, title_song: newTitle, file_url_song: newFileUrl })
+        }).then(() => {
+          editSongModal.classList.remove('active');
+          loadMySongs();
+        });
+      };
+
+      // Eliminar canción
+      window.deleteSong = function(id) {
+        if (!confirm('¿Seguro que deseas eliminar esta canción?')) return;
+        fetch(`/api/songs/${id}`, { method: 'DELETE' })
+          .then(loadMySongs);
+      };
+
+      // Tabla general de canciones
+      fetch('/api/songs')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('songs-table-body');
+          if (data.success && Array.isArray(data.songs)) {
+            tbody.innerHTML = data.songs.map(song => `
+              <tr>
+                <td>${song.id_song}</td>
+                <td>${song.id_user}</td>
+                <td>${song.title_song}</td>
+                <td>
+                  ${song.file_url_song
+                    ? `<a href="${song.file_url_song}" target="_blank">Ver archivo</a>`
+                    : '<span style="color:#b0c3ce;">Sin archivo</span>'}
+                </td>
+              </tr>
+            `).join('');
+          } else {
+            tbody.innerHTML = '<tr><td colspan="4">No hay canciones disponibles.</td></tr>';
+          }
+        })
+        .catch(() => {
+          document.getElementById('songs-table-body').innerHTML =
+            '<tr><td colspan="4">Error al cargar canciones.</td></tr>';
+        });
+    });
   </script>
 </body>
 </html>
