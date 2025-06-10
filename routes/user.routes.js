@@ -83,4 +83,13 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+//para uso del chat
+// GET: obtener usuario logueado
+router.get('/me', (req, res) => {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ success: false, message: 'No autenticado' });
+  }
+  res.json({ success: true, user: req.session.user });
+});
+
 module.exports = router;
