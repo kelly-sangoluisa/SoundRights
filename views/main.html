@@ -46,6 +46,7 @@
           <th>ID Usuario</th>
           <th>Título de la Canción</th>
           <th>Archivo</th>
+          <th>Adquirir Derechos</th>
         </tr>
       </thead>
       <tbody id="songs-table-body">
@@ -245,17 +246,48 @@
                     ? `<a href="${song.file_url_song}" target="_blank">Ver archivo</a>`
                     : '<span style="color:#b0c3ce;">Sin archivo</span>'}
                 </td>
+                <td>
+                  <button class="rights-btn" onclick="adquirirDerechos(${song.id_song}, ${song.id_user}, '${song.title_song.replace(/'/g, "\\'")}')">Adquirir Derechos</button>
+                </td>
               </tr>
             `).join('');
           } else {
-            tbody.innerHTML = '<tr><td colspan="4">No hay canciones disponibles.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5">No hay canciones disponibles.</td></tr>';
           }
         })
         .catch(() => {
           document.getElementById('songs-table-body').innerHTML =
-            '<tr><td colspan="4">Error al cargar canciones.</td></tr>';
+            '<tr><td colspan="5">Error al cargar canciones.</td></tr>';
         });
+
+      // Función para adquirir derechos
+      window.adquirirDerechos = function(idCancion, idAutor, titulo) {
+        window.location.href = `/chat/history/${userId}/${idAutor}`;
+      };
     });
   </script>
+
+  <style>
+    .buy-btn, .rights-btn {
+      background: #5581a4;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+      margin-bottom: 2px;
+    }
+    .buy-btn:hover, .rights-btn:hover {
+      background: #6b91ac;
+    }
+    .rights-btn {
+      background: #4caf50;
+    }
+    .rights-btn:hover {
+      background: #388e3c;
+    }
+  </style>
 </body>
 </html>

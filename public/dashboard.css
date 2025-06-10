@@ -275,3 +275,17 @@ h1 {
   color: #5581a4;
   font-weight: 500;
 }
+.rights-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+  margin-bottom: 2px;
+}
+.rights-btn:hover {
+  background: #388e3c;
+}
