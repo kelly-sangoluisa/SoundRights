@@ -269,3 +269,9 @@ h1 {
 .buy-btn:hover {
   background: #5581a4;
 }
+.welcome-banner {
+  margin: 24px 0 0 32px;
+  font-size: 1.3rem;
+  color: #5581a4;
+  font-weight: 500;
+}

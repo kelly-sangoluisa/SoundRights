@@ -83,4 +83,13 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// Ruta para obtener el usuario actual de la sesión
+router.get('/current-user', (req, res) => {
+  if (req.session && req.session.user) {
+    res.json({ success: true, user: req.session.user });
+  } else {
+    res.json({ success: false });
+  }
+});
+
 module.exports = router;
