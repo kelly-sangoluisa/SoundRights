@@ -13,7 +13,6 @@ class SongService {
 
   // Crear una nueva canción
   static async createSong({ id_user, title_song, file_url_song }) {
-    // Aquí puedes agregar validaciones de negocio si lo necesitas
     if (!id_user || !title_song) {
       throw new Error('El usuario y el título de la canción son obligatorios.');
     }
@@ -22,7 +21,6 @@ class SongService {
 
   // Actualizar una canción existente
   static async updateSong(id_song, { id_user, title_song, file_url_song }) {
-    // Validaciones de negocio si es necesario
     if (!id_user || !title_song) {
       throw new Error('El usuario y el título de la canción son obligatorios.');
     }
