@@ -11,31 +11,24 @@
   <button id="logoutBtn">Cerrar sesión</button>
   <script>
     // Verifica sesión y muestra el nombre real
-    fetch('/current-user')
+    fetch('/me', { credentials: 'include' })
       .then(res => res.json())
       .then(data => {
         if (data.success && data.user) {
           document.getElementById('welcome-message').textContent =
             `¡Bienvenido, ${data.user.name_user}!`;
-          // Guarda el id del usuario logueado para el chat
-          window.userId = data.user.id_user;
         } else {
           window.location.href = '/login';
         }
       });
 
     document.getElementById('goChat').addEventListener('click', function() {
-      // Redirige al historial de chat entre el usuario logueado y el usuario 2
-      // Esto coincide con la ruta: /chat/history/:userA/:userB
-      if (window.userId) {
-        window.location.href = `/chat/history/${window.userId}/2`;
-      } else {
-        alert('No se pudo obtener el usuario logueado.');
-      }
+      // Redirige al chat con el usuario 2
+      window.location.href = `/chat?receiver=2`;
     });
 
     document.getElementById('logoutBtn').onclick = async () => {
-      await fetch('/logout', { method: 'POST' });
+      await fetch('/logout', { method: 'POST', credentials: 'include' });
       window.location.href = '/login';
     };
   </script>
