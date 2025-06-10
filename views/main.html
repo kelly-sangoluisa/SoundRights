@@ -68,7 +68,7 @@
           <th>ID Usuario</th>
           <th>Título de la Canción</th>
           <th>Archivo</th>
-          <th>Acción</th> <!-- Nueva columna -->
+          <th>Adquirir Derechos</th>
         </tr>
       </thead>
       <tbody id="songs-table-body">
@@ -265,7 +265,7 @@
                     : '<span style="color:#b0c3ce;">Sin archivo</span>'}
                 </td>
                 <td>
-                  <button class="buy-btn" onclick="comprarCancion(${song.id_song}, '${song.title_song.replace(/'/g, "\\'")}')">Comprar</button>
+                  <button class="rights-btn" onclick="window.location.href='/chat?receiver=${song.id_user}&songId=${song.id_song}'">Adquirir Derechos</button>
                 </td>
               </tr>
             `).join('');
@@ -277,9 +277,6 @@
           document.getElementById('songs-table-body').innerHTML =
             '<tr><td colspan="5">Error al cargar canciones.</td></tr>';
         });
-      window.comprarCancion = function(id, titulo) {
-        alert(`Comprar canción: ${titulo} (ID: ${id})`);
-      };
     });
   </script>
 </body>
