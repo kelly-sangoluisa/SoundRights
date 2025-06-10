@@ -1,0 +1,197 @@
+/* ===== LOGIN.CSS - SOUNDRIGHTS ===== */
+:root {
+  --color-primary: #5A7FA3;
+  --color-secondary: #7B9BB8;
+  --color-tertiary: #A5C1D4;
+  --color-light: #D1D9E0;
+  --color-background: #F5F7F9;
+  --color-white: #ffffff;
+  --color-shadow: rgba(90, 127, 163, 0.15);
+  --color-error: #e74c3c;
+  --color-success: #27ae60;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-tertiary));
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20,50 Q30,30 50,50 T80,50" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/></svg>');
+  animation: musicWaves 15s infinite linear;
+  z-index: 1;
+}
+
+@keyframes musicWaves {
+  0% { transform: translate(-50%, -50%); }
+  100% { transform: translate(-60%, -60%); }
+}
+
+.auth-container {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(20px);
+  padding: 3rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 25px 80px rgba(90,127,163,0.3);
+  max-width: 420px;
+  width: 100%;
+  z-index: 2;
+  border: 1px solid rgba(255,255,255,0.3);
+  animation: slideInUp 0.8s ease-out;
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo h1 {
+  font-size: 2.2rem;
+  color: var(--color-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo p {
+  font-size: 0.95rem;
+  color: var(--color-secondary);
+}
+
+#alert-container {
+  margin-bottom: 1.5rem;
+}
+
+.alert {
+  padding: 0.875rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: rgba(231, 76, 60, 0.1);
+  color: var(--color-error);
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.alert-success {
+  background: rgba(39, 174, 96, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(39, 174, 96, 0.2);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.form-control {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border: 2px solid var(--color-light);
+  font-size: 1rem;
+  background: var(--color-white);
+  transition: 0.3s ease;
+  color: var(--color-primary);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(123, 155, 184, 0.15);
+}
+
+.form-control:hover {
+  border-color: var(--color-tertiary);
+}
+
+.btn {
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--color-white);
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(90,127,163,0.4);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-links {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+.auth-links a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+  color: var(--color-primary);
+}
