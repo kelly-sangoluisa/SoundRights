@@ -30,7 +30,6 @@ class LicenseService {
     return await LicenseRepository.delete(id_license);
   }
  
-  // Obtener licencias por usuario solicitante
   static async getLicensesByRequesterUser(id_requester_user) {
     return await LicenseRepository.getByRequesterUserId(id_requester_user);
   }
@@ -43,6 +42,11 @@ class LicenseService {
   static async getLicensesByUserAndSong(id_requester_user, id_song) {
     return await LicenseRepository.findByUserAndSong(id_requester_user, id_song);
   }
+
+  // Obtener licencias por usuario solicitante
+  
+
+
 }
  
 module.exports = LicenseService;
