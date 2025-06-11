@@ -5,7 +5,13 @@ const LicenseService = require('../Business/LicenseService');
 // GET /api/licenses - Listar todas las licencias
 router.get('/licenses', async (req, res) => {
   try {
-    const licenses = await LicenseService.getAllLicenses();
+    const { requester, song } = req.query;
+    let licenses;
+    if (requester && song) {
+      licenses = await LicenseService.getLicensesByUserAndSong(requester, song);
+    } else {
+      licenses = await LicenseService.getAllLicenses();
+    }
     res.json({ success: true, licenses });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -20,4 +26,6 @@ router.post('/licenses', async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
+
 module.exports = router;
