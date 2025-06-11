@@ -4,20 +4,20 @@
 .color3 { color: #b0c3ce; }
 .color4 { color: #dedbd8; }
 .color5 { color: #f7f4eb; }
-
+ 
 body {
   background-color: #f7f4eb;
   margin: 0;
   font-family: 'Segoe UI', Arial, sans-serif;
 }
-
+ 
 header {
   background-color: #5581a4;
   color: #f7f4eb;
   padding: 24px 0;
   box-shadow: 0 2px 8px rgba(85,129,164,0.08);
 }
-
+ 
 .header-content {
   display: flex;
   align-items: center;
@@ -27,13 +27,13 @@ header {
   width: 100%;
   gap: 24px;
 }
-
+ 
 .header-actions {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
+ 
 .icon-btn {
   background: rgba(255,255,255,0.13);
   border: 1.5px solid #b0c3ce;
@@ -45,29 +45,29 @@ header {
   align-items: center;
   justify-content: center;
 }
-
+ 
 .icon-btn svg {
   /* Hace los iconos más visibles */
   stroke: #fff;
   fill: #fff;
 }
-
+ 
 .icon-btn:hover {
   background: #fff;
   border: 1.5px solid #5581a4;
 }
-
+ 
 .icon-btn:hover svg {
   stroke: #5581a4;
   fill: #5581a4;
 }
-
+ 
 h1 {
   margin: 0;
   font-size: 2.5rem;
   letter-spacing: 2px;
 }
-
+ 
 .welcome-message {
   color: #f7f4eb;
   font-size: 1.1rem;
@@ -75,7 +75,7 @@ h1 {
   margin-left: 16px;
   white-space: nowrap;
 }
-
+ 
 .logout-btn {
   background-color: #dedbd8;
   color: #5581a4;
@@ -86,11 +86,11 @@ h1 {
   cursor: pointer;
   transition: background 0.2s;
 }
-
+ 
 .logout-btn:hover {
   background-color: #b0c3ce;
 }
-
+ 
 .dashboard-actions {
   display: flex;
   justify-content: flex-start;
@@ -98,7 +98,7 @@ h1 {
   gap: 16px;
   margin: 24px 0 0 32px;
 }
-
+ 
 .action-btn {
   background-color: #6b91ac;
   color: #f7f4eb;
@@ -109,11 +109,11 @@ h1 {
   cursor: pointer;
   transition: background 0.2s;
 }
-
+ 
 .action-btn:hover {
   background-color: #5581a4;
 }
-
+ 
 /* Modal estilos */
 .modal {
   position: fixed;
@@ -157,19 +157,19 @@ h1 {
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(85,129,164,0.08);
 }
-
+ 
 .songs-table th, .songs-table td {
   padding: 12px 16px;
   border-bottom: 1px solid #dedbd8;
   text-align: left;
 }
-
+ 
 .songs-table th {
   background: #b0c3ce;
   color: #5581a4;
   font-weight: 600;
 }
-
+ 
 .songs-table tr:last-child td {
   border-bottom: none;
 }
@@ -288,4 +288,66 @@ h1 {
 }
 .rights-btn:hover {
   background: #388e3c;
+}
+ 
+/* Bandeja de entrada moderna */
+#inboxContent h3 {
+  color: #5581a4;
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+ 
+.inbox-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ 
+.inbox-list li {
+  background: #f7f4eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(85,129,164,0.06);
+  margin-bottom: 1.2rem;
+  padding: 1.1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: box-shadow 0.2s, background 0.2s;
+}
+ 
+.inbox-list li:hover {
+  background: #e3eaf2;
+  box-shadow: 0 8px 24px rgba(85,129,164,0.10);
+}
+ 
+.inbox-chat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+ 
+.inbox-chat-user {
+  font-weight: bold;
+  color: #5581a4;
+}
+ 
+.inbox-chat-song {
+  font-size: 0.98rem;
+  color: #6b91ac;
+}
+ 
+.inbox-open-btn {
+  background: linear-gradient(90deg, #5581a4 60%, #6b91ac 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+ 
+.inbox-open-btn:hover {
+  background: linear-gradient(90deg, #6b91ac 60%, #5581a4 100%);
 }
