@@ -1,9 +1,9 @@
 const socket = io();
-
+ 
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 const messages = document.getElementById('messages');
-
+ 
 let sender = null;
 let receiver = null;
 let chatId = null;
@@ -22,7 +22,6 @@ async function initChat() {
     return;
   }
   sender = dataMe.user.id_user;
-
   // 2. id_chat de la URL
   const params = new URLSearchParams(window.location.search);
   chatId = params.get('id_chat');
@@ -31,7 +30,6 @@ async function initChat() {
     window.location.href = '/main';
     return;
   }
-
   // 3. Info del chat
   const resChat = await fetch(`/chat/info/${chatId}`);
   const chatData = await resChat.json();
@@ -41,7 +39,6 @@ async function initChat() {
     return;
   }
   dataChat = chatData;
-
   // 4. Determina receptor
   if (Number(chatData.chat.user1Id) === Number(sender)) {
     receiver = chatData.chat.user2Id;
@@ -52,7 +49,6 @@ async function initChat() {
     window.location.href = '/main';
     return;
   }
-
   // 5. Mostrar botón solo al dueño de la canción
   const songId = chatData.chat.songId || chatData.chat.songid || chatData.chat.id_song;
   const resSong = await fetch(`/api/songs/${songId}`);
@@ -89,7 +85,6 @@ async function loadHistory() {
     }
   }
 }
-
 // Enviar mensaje por socket
 form.addEventListener('submit', function (e) {
   e.preventDefault();
@@ -105,7 +100,7 @@ form.addEventListener('submit', function (e) {
     input.value = '';
   }
 });
-
+ 
 // Recibir mensaje en tiempo real
 socket.on('chat message', function (msg) {
   if (msg.idChat == chatId || msg.id_chat == chatId) {
@@ -173,7 +168,6 @@ document.getElementById('confirmGrantBtn').onclick = async () => {
 function scrollToBottom() {
   messages.scrollTop = messages.scrollHeight;
 }
-
 function showSuccessAlert(msg) {
   const alertDiv = document.getElementById('alert-success');
   alertDiv.textContent = msg;
@@ -182,5 +176,4 @@ function showSuccessAlert(msg) {
     alertDiv.style.display = 'none';
   }, 2500);
 }
-
 // ...dentro del if (data.success) del confirmGrantBtn:

@@ -7,13 +7,13 @@
   --color-white: #ffffff;
   --color-shadow: rgba(85, 129, 164, 0.2);
 }
-
+ 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
+ 
 body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, var(--color1), var(--color2));
@@ -25,7 +25,7 @@ body {
   position: relative;
   overflow: hidden;
 }
-
+ 
 .chat-container {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(15px);
@@ -40,7 +40,7 @@ body {
   z-index: 2;
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
-
+ 
 #messages {
   flex: 1;
   overflow-y: auto;
@@ -52,7 +52,7 @@ body {
   scroll-behavior: smooth;
   list-style: none;
 }
-
+ 
 #messages li {
   padding: 0.8rem 1.2rem;
   background-color: var(--color4);
@@ -63,20 +63,20 @@ body {
   align-self: flex-start;
   animation: fadeIn 0.3s ease-in-out;
 }
-
+ 
 #messages li.self {
   align-self: flex-end;
   background-color: var(--color3);
   color: rgb(0, 0, 0);
 }
-
+ 
 form {
   display: flex;
   padding: 1rem;
   border-top: 1px solid var(--color4);
   background: var(--color-white);
 }
-
+ 
 input#input {
   flex: 1;
   padding: 0.9rem 1.2rem;
@@ -86,13 +86,13 @@ input#input {
   transition: 0.3s;
   margin-right: 1rem;
 }
-
+ 
 input#input:focus {
   outline: none;
   border-color: var(--color1);
   box-shadow: 0 0 0 3px rgba(85, 129, 164, 0.2);
 }
-
+ 
 button {
   padding: 0.9rem 1.5rem;
   background: linear-gradient(135deg, var(--color1), var(--color2));
@@ -104,17 +104,17 @@ button {
   transition: 0.3s ease;
   font-size: 1.2rem;
 }
-
+ 
 button:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px var(--color-shadow);
 }
-
+ 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
+ 
 #chat-header {
   display: flex;
   justify-content: space-between;
@@ -128,7 +128,7 @@ button:hover {
   top: 0;
   z-index: 100;
 }
-
+ 
 #chat-header button {
   background-color: var(--color3);
   border: 1px solid var(--color3);
@@ -138,17 +138,16 @@ button:hover {
   cursor: pointer;
   font-size: 1rem;
 }
-
+ 
 #chat-header button:hover {
   background-color: var(--color3);
 }
-
+ 
 #chat-title {
   flex: 1;
   text-align: center;
   font-size: 1.2rem;
 }
-
 /* Modal estilos */
 .modal {
   display: none;
@@ -183,7 +182,6 @@ button:hover {
   background: #b0c3ce;
   color: #333;
 }
-
 /* Alert flotante de éxito */
 .alert-success {
   position: fixed;

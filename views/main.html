@@ -30,13 +30,13 @@
       </div>
     </div>
   </header>
-
+ 
   <!-- Botones debajo del header alineados a la izquierda -->
   <div class="dashboard-actions">
     <button class="action-btn" id="mySongsBtn">Mis Canciones</button>
     <button class="action-btn">Derechos adquiridos</button>
   </div>
-
+ 
   <!-- Tabla de canciones de la base de datos -->
   <div class="songs-table-container">
     <table class="songs-table">
@@ -54,7 +54,7 @@
       </tbody>
     </table>
   </div>
-
+ 
   <!-- Modal para CRUD de canciones del usuario logueado -->
   <div id="songsModal" class="modal">
     <div class="modal-content">
@@ -80,7 +80,7 @@
       </table>
     </div>
   </div>
-
+ 
   <!-- Modal para editar canción -->
   <div id="editSongModal" class="modal">
     <div class="modal-content">
@@ -94,7 +94,7 @@
       </form>
     </div>
   </div>
-
+ 
   <!-- Modal para ver todas las licencias -->
   <div id="licensesModal" class="modal">
     <div class="modal-content">
@@ -121,7 +121,7 @@
   
 
     let userId = null;
-
+ 
     document.addEventListener('DOMContentLoaded', function() {
       // Verifica sesión y muestra el nombre real
       fetch('/current-user')
@@ -137,7 +137,6 @@
             window.location.href = '/login';
           }
         });
-
       // Mostrar bandeja de chats al hacer click en el botón de mensajes
       document.getElementById('goChat').addEventListener('click', async function() {
         if (!userId) return;
@@ -172,12 +171,11 @@
       document.getElementById('closeInboxModal').onclick = () => {
         document.getElementById('inboxModal').classList.remove('active');
       };
-
       document.getElementById('logoutBtn').onclick = async () => {
         await fetch('/logout', { method: 'POST' });
         window.location.href = '/login';
       };
-
+ 
       // Mostrar modal de "Mis Canciones"
       const songsModal = document.getElementById('songsModal');
       const mySongsBtn = document.getElementById('mySongsBtn');
@@ -202,13 +200,13 @@
           inboxModal.classList.remove('active');
         }
       };
-
+ 
       // Modal de edición
       const editSongModal = document.getElementById('editSongModal');
       document.getElementById('closeEditSongModal').onclick = () => {
         editSongModal.classList.remove('active');
       };
-
+ 
       // Mostrar modal de "Derechos adquiridos" (ahora muestra todas las licencias)
       const licensesModal = document.getElementById('licensesModal');
       const rightsBtn = document.querySelectorAll('.dashboard-actions .action-btn')[1]; // Segundo botón
@@ -220,7 +218,6 @@
       document.getElementById('closeLicensesModal').onclick = () => {
         licensesModal.classList.remove('active');
       };
-
       // Cargar todas las licencias de la base de datos
       function loadAllLicenses() {
         fetch(`/api/licenses`)
@@ -245,7 +242,7 @@
             }
           });
       }
-
+ 
       // CRUD: Cargar solo las canciones del usuario logueado en el modal
       function loadMySongs() {
         fetch('/api/songs')
@@ -276,7 +273,7 @@
             }
           });
       }
-
+ 
       // Crear nueva canción (solo para el usuario logueado)
       document.getElementById('songForm').onsubmit = async function(e) {
         e.preventDefault();
@@ -291,7 +288,7 @@
         this.reset();
         loadMySongs();
       };
-
+ 
       // Editar canción (abre modal de edición)
       window.editSong = function(id, title, fileUrl) {
         document.getElementById('editSongId').value = id;
@@ -299,7 +296,7 @@
         document.getElementById('editSongFileUrl').value = fileUrl;
         editSongModal.classList.add('active');
       };
-
+ 
       // Guardar cambios de edición
       document.getElementById('editSongForm').onsubmit = function(e) {
         e.preventDefault();
@@ -315,14 +312,14 @@
           loadMySongs();
         });
       };
-
+ 
       // Eliminar canción
       window.deleteSong = function(id) {
         if (!confirm('¿Seguro que deseas eliminar esta canción?')) return;
         fetch(`/api/songs/${id}`, { method: 'DELETE' })
           .then(loadMySongs);
       };
-
+ 
       // Tabla general de canciones
       fetch('/api/songs')
         .then(res => res.json())
@@ -352,7 +349,6 @@
           document.getElementById('songs-table-body').innerHTML =
             '<tr><td colspan="5">Error al cargar canciones.</td></tr>';
         });
-
       // Función para abrir chat (buscar o crear y redirigir)
       window.openChat = async function(songId, otherUserId) {
         if (!userId) return;

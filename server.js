@@ -4,12 +4,10 @@ const socketIo = require('socket.io');
 const path = require('path');
 const session = require('express-session');
 const ChatService = require('./Business/ChatService.js');
-
 // Inicialización
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-
 // Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -18,10 +16,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
-
+ 
 // Archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
-
+ 
 // Rutas
 const chatRoutes = require('./routes/chat.routes.js');
 const userRoutes = require('./routes/user.routes.js');
@@ -38,7 +36,6 @@ app.use('/api', songRoutes);
 app.get('/', (req, res) => {
   res.redirect('/login');
 });
-
 // Ruta para chat.html (protegida)
 app.get('/chat', (req, res) => {
   if (!req.session || !req.session.user) {
@@ -66,7 +63,6 @@ io.on('connection', (socket) => {
         msg.content
       );
       console.log('Mensaje guardado:', savedMsg);
-
       // Convierte a objeto plano antes de emitir
       const plainMsg = {
         id: savedMsg.id,
@@ -76,14 +72,12 @@ io.on('connection', (socket) => {
         content: savedMsg.content,
         sentAt: savedMsg.sentAt
       };
-
       io.emit('chat message', plainMsg);
     } catch (err) {
       console.error('Error al guardar mensaje:', err);
       socket.emit('chat error', err.message);
     }
   });
-
   socket.on('disconnect', () => {
     console.log('Usuario desconectado');
   });

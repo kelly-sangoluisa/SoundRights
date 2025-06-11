@@ -7,5 +7,5 @@ class Message {
     this.content = content;
   }
 }
-
-module.exports = Message;
+ 
+module.exports = Chat;

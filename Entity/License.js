@@ -8,5 +8,5 @@ class License {
     this.date_end_license = row.date_end_license;
   }
 }
-
+ 
 module.exports = License;

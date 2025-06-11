@@ -1,6 +1,5 @@
 const { pool } = require('../database.js');
 const Chat = require('../Entity/Chat.js');
-
 class ChatRepository {
   // Buscar chat por canción y usuarios (sin importar el orden)
   async findByUsersAndSong(songId, userA, userB) {
@@ -15,7 +14,6 @@ class ChatRepository {
     const row = result.rows[0];
     return row ? new Chat(row.id_chat, row.id_song, row.id_user1, row.id_user2, row.created_at) : null;
   }
-
   // Crear un nuevo chat
   async create(songId, user1, user2) {
     const result = await pool.query(
@@ -27,7 +25,6 @@ class ChatRepository {
     const row = result.rows[0];
     return new Chat(row.id_chat, row.id_song, row.id_user1, row.id_user2, row.created_at);
   }
-
   // Listar todos los chats de un usuario
   async getChatsForUser(userId) {
     const result = await pool.query(

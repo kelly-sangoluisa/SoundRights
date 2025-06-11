@@ -7,5 +7,4 @@ class Chat {
         this.createdAt = createdAt;
     }
 }
-
 module.exports = Chat;

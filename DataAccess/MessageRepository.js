@@ -1,6 +1,6 @@
 const { pool } = require('../database.js');
 const Message = require('../Entity/Message.js');
-
+ 
 class MessageRepository {
   // Obtener mensajes de un chat
   async getByChatId(idChat, limit = 50) {
@@ -12,7 +12,6 @@ class MessageRepository {
       row => new Message(row.id_message, row.id_sender_user, row.id_receiver_user, row.id_chat, row.content_message, row.sent_at)
     );
   }
-
   // Agregar mensaje a un chat
   async add(sender, receiver, idChat, content) {
     const result = await pool.query(
@@ -25,5 +24,6 @@ class MessageRepository {
     return new Message(row.id_message, row.id_sender_user, row.id_receiver_user, row.id_chat, row.content_message, row.sent_at);
   }
 }
-
+ 
 module.exports = MessageRepository;
+ 
