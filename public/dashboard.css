@@ -143,35 +143,47 @@ h1 {
   color: #5581a4;
   cursor: pointer;
 }
+/* Mejora la tabla de canciones */
 .songs-table-container {
+  max-width: 800px;
   margin: 32px auto 0 auto;
-  max-width: 900px;
-  display: flex;
-  justify-content: center;
+  padding: 0 16px;
 }
+
 .songs-table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(85,129,164,0.08);
+  box-shadow: 0 2px 12px rgba(85,129,164,0.08);
 }
- 
+
 .songs-table th, .songs-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid #dedbd8;
-  text-align: left;
+  text-align: center;
+  padding: 16px 10px;
+  border-bottom: 1px solid #e0e6ed;
 }
- 
+
 .songs-table th {
-  background: #b0c3ce;
+  background: #f5f8fa;
   color: #5581a4;
+  font-size: 1.1rem;
   font-weight: 600;
 }
- 
+
 .songs-table tr:last-child td {
   border-bottom: none;
+}
+
+.songs-table a {
+  color: #5581a4;
+  text-decoration: underline;
+}
+
+.songs-table .rights-btn {
+  margin: 0 auto;
+  display: block;
 }
 .edit-btn, .delete-btn {
   background: #6b91ac;
@@ -196,21 +208,25 @@ h1 {
 }
 #songForm {
   display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 16px;
+  align-items: center;
+  justify-content: center;
 }
 #songForm input {
   flex: 1;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #b0c3ce;
   border-radius: 4px;
+  font-size: 1rem;
 }
 #songForm button {
   background: #5581a4;
   color: #f7f4eb;
   border: none;
   border-radius: 4px;
-  padding: 8px 16px;
+  padding: 10px 18px;
+  font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -341,4 +357,51 @@ h1 {
 }
 .inbox-open-btn:hover {
   background: linear-gradient(90deg, #6b91ac 60%, #5581a4 100%);
+}
+/* Tabla del modal CRUD de canciones del usuario */
+.modal-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(85,129,164,0.07);
+  margin-top: 18px;
+}
+
+.modal-table th, .modal-table td {
+  text-align: center;
+  padding: 14px 8px;
+  border-bottom: 1px solid #e0e6ed;
+}
+
+.modal-table th {
+  background: #f5f8fa;
+  color: #5581a4;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.modal-table tr:last-child td {
+  border-bottom: none;
+}
+
+.modal-table a {
+  color: #5581a4;
+  text-decoration: underline;
+}
+
+.crud-btn {
+  background: #6b91ac;
+  color: #f7f4eb;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  margin: 0 2px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+.crud-btn:hover {
+  background: #5581a4;
 }
