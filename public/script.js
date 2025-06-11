@@ -58,10 +58,24 @@ async function initChat() {
     return;
   }
   const ownerId = dataSong.song.id_user;
+   const licenseBanner = document.getElementById('license-granted-banner');
+  const grantBtn = document.getElementById('grant-license-btn');
+  
   if (Number(sender) === Number(ownerId)) {
-    document.getElementById('grant-license-btn').style.display = 'inline-block';
+    // Verifica si ya existe una licencia aprobada para este requester y canción
+    const checkRes = await fetch(`/licenses?requester=${receiver}&song=${songId}`);
+    const checkData = await checkRes.json();
+    const yaTieneLicencia = checkData.success && checkData.licenses.some(l => l.status_license === 'approved');
+    if (yaTieneLicencia) {
+      grantBtn.style.display = 'none';
+      licenseBanner.style.display = 'block';
+    } else {
+      grantBtn.style.display = 'inline-block';
+      licenseBanner.style.display = 'none';
+    }
   } else {
-    document.getElementById('grant-license-btn').style.display = 'none';
+    grantBtn.style.display = 'none';
+    licenseBanner.style.display = 'none';
   }
 
   // 6. Carga historial
@@ -155,6 +169,9 @@ document.getElementById('confirmGrantBtn').onclick = async () => {
       document.getElementById('grantLicenseModal').style.display = 'none';
       document.getElementById('grant-license-btn').disabled = true;
       showSuccessAlert('Licencia otorgada exitosamente');
+      setTimeout(() => {
+        window.location.href = '/main';
+      }, 1500);
     } else {
       alert('Error al otorgar la licencia: ' + (data.message || ''));
     }
@@ -176,4 +193,3 @@ function showSuccessAlert(msg) {
     alertDiv.style.display = 'none';
   }, 2500);
 }
-// ...dentro del if (data.success) del confirmGrantBtn:
