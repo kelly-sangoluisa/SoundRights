@@ -4,7 +4,11 @@ const Song = require('../Entity/Song');
 class SongRepository {
   // Obtener todas las canciones
   static async getAll() {
-    const result = await pool.query('SELECT id_song, id_user, title_song, file_url_song FROM song');
+    const result = await pool.query(`
+      SELECT s.id_song, s.id_user, s.title_song, s.file_url_song, u.name_user AS artist_name
+      FROM song s
+      JOIN app_user u ON s.id_user = u.id_user
+    `);
     return result.rows.map(row => new Song(row));
   }
 
