@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const LicenseService = require('../Business/LicenseService');
  
-// GET /api/licenses - Listar todas las licencias
+// GET /licenses?requester=ID
 router.get('/licenses', async (req, res) => {
   try {
     const { requester, song } = req.query;
     let licenses;
-    if (requester && song) {
+    if (requester && !song) {
+      licenses = await LicenseService.getLicensesByRequesterUser(requester);
+    } else if (requester && song) {
       licenses = await LicenseService.getLicensesByUserAndSong(requester, song);
     } else {
       licenses = await LicenseService.getAllLicenses();
@@ -17,6 +19,7 @@ router.get('/licenses', async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
 router.post('/licenses', async (req, res) => {
   try {
     const { id_song, id_requester_user, status_license } = req.body;

@@ -34,7 +34,7 @@
   <!-- Botones debajo del header alineados a la izquierda -->
   <div class="dashboard-actions">
     <button class="action-btn" id="mySongsBtn">Mis Canciones</button>
-    <button class="action-btn">Derechos adquiridos</button>
+    <button class="action-btn" id="myLicensesBtn">Derechos adquiridos</button>
   </div>
  
   <!-- Tabla de canciones de la base de datos -->
@@ -94,30 +94,27 @@
   </div>
  
   <!-- Modal para ver todas las licencias -->
-  <div id="licensesModal" class="modal">
-    <div class="modal-content">
-      <button class="close-modal" id="closeLicensesModal" title="Cerrar">&times;</button>
-      <h2>Todas las Licencias</h2>
-      <table class="modal-table">
-        <thead>
-          <tr>
-            <th>ID Licencia</th>
-            <th>ID Canción</th>
-            <th>ID Solicitante</th>
-            <th>Estado</th>
-            <th>Inicio</th>
-            <th>Fin</th>
-          </tr>
-        </thead>
-        <tbody id="my-licenses-table-body">
-          <!-- Las licencias se llenarán dinámicamente -->
-        </tbody>
-      </table>
-    </div>
+  <div id="myLicensesModal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" id="closeMyLicensesModal" title="Cerrar">&times;</button>
+    <h2>Mis Licencias</h2>
+    <table class="modal-table">
+      <thead>
+        <tr>
+          <th>ID Licencia</th>
+          <th>Canción</th>
+          <th>Estado</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+        </tr>
+      </thead>
+      <tbody id="my-licenses-table-body">
+        <!-- Se llenará dinámicamente -->
+      </tbody>
+    </table>
   </div>
+</div>
 <script>
-  
-
     let userId = null;
  
     document.addEventListener('DOMContentLoaded', function() {
@@ -207,41 +204,40 @@
         editSongModal.classList.remove('active');
       };
  
-      // Mostrar modal de "Derechos adquiridos" (ahora muestra todas las licencias)
-      const licensesModal = document.getElementById('licensesModal');
-      const rightsBtn = document.querySelectorAll('.dashboard-actions .action-btn')[1]; // Segundo botón
-      rightsBtn.textContent = "Derechos adquiridos";
-      rightsBtn.onclick = () => {
-        licensesModal.classList.add('active');
-        loadAllLicenses();
-      };
-      document.getElementById('closeLicensesModal').onclick = () => {
-        licensesModal.classList.remove('active');
-      };
-      // Cargar todas las licencias de la base de datos
-      function loadAllLicenses() {
-        fetch(`/api/licenses`)
-          .then(res => res.json())
-          .then(data => {
-            const tbody = document.getElementById('my-licenses-table-body');
-            if (data.success && Array.isArray(data.licenses)) {
-              tbody.innerHTML = data.licenses.length > 0
-                ? data.licenses.map(lic => `
-                  <tr>
-                    <td>${lic.id_license}</td>
-                    <td>${lic.id_song}</td>
-                    <td>${lic.id_requester_user}</td>
-                    <td>${lic.status_license}</td>
-                    <td>${lic.date_start_license ? lic.date_start_license.substring(0,10) : ''}</td>
-                    <td>${lic.date_end_license ? lic.date_end_license.substring(0,10) : ''}</td>
-                  </tr>
-                `).join('')
-                : '<tr><td colspan="6">No hay licencias registradas.</td></tr>';
-            } else {
-              tbody.innerHTML = '<tr><td colspan="6">No hay licencias registradas.</td></tr>';
-            }
-          });
+      // Mostrar modal de "Mis Licencias"
+const myLicensesModal = document.getElementById('myLicensesModal');
+const myLicensesBtn = document.getElementById('myLicensesBtn');
+myLicensesBtn.onclick = () => {
+  myLicensesModal.classList.add('active');
+  loadMyLicenses();
+};
+document.getElementById('closeMyLicensesModal').onclick = () => {
+  myLicensesModal.classList.remove('active');
+};
+
+// Cargar solo las licencias del usuario logueado
+function loadMyLicenses() {
+  fetch(`/licenses?requester=${userId}`)
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById('my-licenses-table-body');
+      if (data.success && Array.isArray(data.licenses)) {
+        tbody.innerHTML = data.licenses.length > 0
+          ? data.licenses.map(lic => `
+            <tr>
+              <td>${lic.id_license_request}</td>
+              <td>${lic.song_title || lic.id_song}</td>
+              <td>${lic.status_license}</td>
+              <td>${lic.date_start_license ? lic.date_start_license.substring(0,10) : ''}</td>
+              <td>${lic.date_end_license ? lic.date_end_license.substring(0,10) : ''}</td>
+            </tr>
+          `).join('')
+          : '<tr><td colspan="6">No tienes licencias registradas.</td></tr>';
+      } else {
+        tbody.innerHTML = '<tr><td colspan="6">No tienes licencias registradas.</td></tr>';
       }
+    });
+}
  
       // CRUD: Cargar solo las canciones del usuario logueado en el modal
       function loadMySongs() {

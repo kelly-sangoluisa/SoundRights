@@ -55,10 +55,14 @@ class LicenseRepository {
   // Obtener licencias por usuario solicitante
   static async getByRequesterUserId(id_requester_user) {
     const result = await pool.query(
-      'SELECT * FROM license_request WHERE id_requester_user = $1',
+      `SELECT l.*, s.title_song AS song_title, u.name_user AS artist_name
+      FROM license_request l
+      JOIN song s ON l.id_song = s.id_song
+      JOIN app_user u ON s.id_user = u.id_user
+      WHERE l.id_requester_user = $1`,
       [id_requester_user]
     );
-    return result.rows.map(row => new License(row));
+    return result.rows; // Puedes mapear a License si quieres
   }
  
   // Obtener licencias por canción
