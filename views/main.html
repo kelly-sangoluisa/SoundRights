@@ -43,8 +43,9 @@
       <thead>
         <tr>
           <th>Título de la Canción</th>
-          <th>Archivo</th>
-          <th>Adquirir Derechos</th>
+            <th>Artista</th>
+            <th>Reproducir</th>
+            <th>Adquirir Derechos</th>
         </tr>
       </thead>
       <tbody id="songs-table-body">
@@ -66,7 +67,6 @@
       <table class="modal-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Título</th>
             <th>Archivo</th>
             <th>Acciones</th>
@@ -143,12 +143,13 @@
         const inboxModal = document.getElementById('inboxModal');
         const inboxContent = document.getElementById('inboxContent');
         if (data.success) {
-          let html = '<h3>Bandeja de chats</h3>';
+          let html = '';
           if (data.chats.length === 0) {
             html += '<div style="text-align:center; color:#888; margin:2rem 0;">No tienes chats aún.</div>';
           } else {
             html += '<ul class="inbox-list">';
             data.chats.forEach(chat => {
+              // Muestra el nombre del otro usuario
               const otherName = (chat.user1Id == userId) ? chat.user2Name : chat.user1Name;
               html += `
                 <li>
@@ -166,6 +167,7 @@
           inboxModal.classList.add('active');
         }
       });
+
       document.getElementById('closeInboxModal').onclick = () => {
         document.getElementById('inboxModal').classList.remove('active');
       };
@@ -252,7 +254,6 @@
               tbody.innerHTML = mySongs.length > 0
                 ? mySongs.map(song => `
                   <tr>
-                    <td>${song.id_song}</td>
                     <td>${song.title_song}</td>
                     <td>
                       ${song.file_url_song
@@ -326,13 +327,17 @@
           if (data.success && Array.isArray(data.songs)) {
             // Filtrar canciones que NO sean del usuario logueado
             const otherSongs = data.songs.filter(song => song.id_user != userId);
-            tbody.innerHTML = otherSongs.length > 0
+              tbody.innerHTML = otherSongs.length > 0
               ? otherSongs.map(song => `
                 <tr>
                   <td>${song.title_song}</td>
+                  <td>${song.artist_name || 'Desconocido'}</td>
                   <td>
                     ${song.file_url_song
-                      ? `<a href="${song.file_url_song}" target="_blank">Ver archivo</a>`
+                      ? `<audio controls style="width:160px;">
+                          <source src="${song.file_url_song}" type="audio/mpeg">
+                          Tu navegador no soporta audio.
+                        </audio>`
                       : '<span style="color:#b0c3ce;">Sin archivo</span>'}
                   </td>
                   <td>
@@ -340,14 +345,14 @@
                   </td>
                 </tr>
               `).join('')
-              : '<tr><td colspan="3">No hay canciones disponibles.</td></tr>';
+              : '<tr><td colspan="4">No hay canciones disponibles.</td></tr>';
           } else {
-            tbody.innerHTML = '<tr><td colspan="3">No hay canciones disponibles.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4">No hay canciones disponibles.</td></tr>';
           }
         })
         .catch(() => {
           document.getElementById('songs-table-body').innerHTML =
-            '<tr><td colspan="3">Error al cargar canciones.</td></tr>';
+            '<tr><td colspan="4">Error al cargar canciones.</td></tr>';
         });
       // Función para abrir chat (buscar o crear y redirigir)
       window.openChat = async function(songId, otherUserId) {
