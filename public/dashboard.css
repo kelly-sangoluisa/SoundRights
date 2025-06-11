@@ -289,3 +289,65 @@ h1 {
 .rights-btn:hover {
   background: #388e3c;
 }
+
+/* Bandeja de entrada moderna */
+#inboxContent h3 {
+  color: #5581a4;
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+
+.inbox-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.inbox-list li {
+  background: #f7f4eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(85,129,164,0.06);
+  margin-bottom: 1.2rem;
+  padding: 1.1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: box-shadow 0.2s, background 0.2s;
+}
+
+.inbox-list li:hover {
+  background: #e3eaf2;
+  box-shadow: 0 8px 24px rgba(85,129,164,0.10);
+}
+
+.inbox-chat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.inbox-chat-user {
+  font-weight: bold;
+  color: #5581a4;
+}
+
+.inbox-chat-song {
+  font-size: 0.98rem;
+  color: #6b91ac;
+}
+
+.inbox-open-btn {
+  background: linear-gradient(90deg, #5581a4 60%, #6b91ac 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.inbox-open-btn:hover {
+  background: linear-gradient(90deg, #6b91ac 60%, #5581a4 100%);
+}

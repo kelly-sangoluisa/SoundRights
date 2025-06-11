@@ -5,82 +5,182 @@ const input = document.getElementById('input');
 const messages = document.getElementById('messages');
 
 let sender = null;
-const receiver = window.receiverId;
+let receiver = null;
+let chatId = null;
+let dataChat = null;
 
-console.log('Valor inicial de receiver:', receiver);
+// Inicializa el chat al cargar la página
+window.addEventListener('DOMContentLoaded', initChat);
 
-// Obtiene el usuario logueado y luego carga el historial
-async function getSender() {
-  console.log('Llamando a /me para obtener el usuario logueado...');
-  const res = await fetch('/me', { credentials: 'include' });
-  const data = await res.json();
-  console.log('Datos recibidos de /me:', data);
-  if (data.success) {
-    sender = data.user.id_user;
-    console.log('Sender obtenido:', sender);
-    loadHistory(); // solo carga historial cuando ya tienes el sender
-  } else {
+async function initChat() {
+  // 1. Usuario logueado
+  const resMe = await fetch('/me', { credentials: 'include' });
+  const dataMe = await resMe.json();
+  if (!dataMe.success) {
     alert('No se pudo obtener el usuario logueado.');
     window.location.href = '/login';
+    return;
   }
+  sender = dataMe.user.id_user;
+
+  // 2. id_chat de la URL
+  const params = new URLSearchParams(window.location.search);
+  chatId = params.get('id_chat');
+  if (!chatId) {
+    alert('No se encontró el chat.');
+    window.location.href = '/main';
+    return;
+  }
+
+  // 3. Info del chat
+  const resChat = await fetch(`/chat/info/${chatId}`);
+  const chatData = await resChat.json();
+  if (!chatData.success || !chatData.chat) {
+    alert('No se encontró el chat.');
+    window.location.href = '/main';
+    return;
+  }
+  dataChat = chatData;
+
+  // 4. Determina receptor
+  if (Number(chatData.chat.user1Id) === Number(sender)) {
+    receiver = chatData.chat.user2Id;
+  } else if (Number(chatData.chat.user2Id) === Number(sender)) {
+    receiver = chatData.chat.user1Id;
+  } else {
+    alert('No tienes acceso a este chat.');
+    window.location.href = '/main';
+    return;
+  }
+
+  // 5. Mostrar botón solo al dueño de la canción
+  const songId = chatData.chat.songId || chatData.chat.songid || chatData.chat.id_song;
+  const resSong = await fetch(`/api/songs/${songId}`);
+  const dataSong = await resSong.json();
+  if (!dataSong.success || !dataSong.song) {
+    alert('No se pudo obtener la información de la canción.');
+    return;
+  }
+  const ownerId = dataSong.song.id_user;
+  if (Number(sender) === Number(ownerId)) {
+    document.getElementById('grant-license-btn').style.display = 'inline-block';
+  } else {
+    document.getElementById('grant-license-btn').style.display = 'none';
+  }
+
+  // 6. Carga historial
+  loadHistory();
 }
 
-// Cargar historial entre sender y receiver
+// Cargar historial de mensajes
 async function loadHistory() {
-  if (sender && receiver) {
-    console.log(`Cargando historial entre sender=${sender} y receiver=${receiver}`);
-    const res = await fetch(`/chat/history/${sender}/${receiver}`);
-    const history = await res.json();
-    console.log('Historial recibido:', history);
-    messages.innerHTML = '';
-    history.forEach(msg => {
-      const item = document.createElement('li');
-      item.textContent = msg.content;
-
-      // Si el mensaje fue enviado por mí, agregamos la clase 'self'
-      if (msg.sender == sender) {
-        item.classList.add('self');
-      }
-
-      messages.appendChild(item);
-    });
-
-    window.scrollTo(0, document.body.scrollHeight);
+  if (chatId) {
+    const res = await fetch(`/chat/${chatId}/messages`);
+    const data = await res.json();
+    if (data.success) {
+      messages.innerHTML = '';
+      data.messages.forEach(msg => {
+        const item = document.createElement('li');
+        item.textContent = msg.content_message || msg.content;
+        if (msg.id_sender_user == sender || msg.sender == sender) item.classList.add('self');
+        messages.appendChild(item);
+      });
+      scrollToBottom();
+    }
   }
 }
-
-// Solo ejecuta getSender al cargar la página
-window.addEventListener('DOMContentLoaded', getSender);
 
 // Enviar mensaje por socket
 form.addEventListener('submit', function (e) {
   e.preventDefault();
-  if (input.value && sender && receiver) {
-    socket.emit('chat message', {
+  const messageText = input.value.trim();
+  if (messageText && sender && receiver && chatId) {
+    const msgObj = {
       sender: Number(sender),
       receiver: Number(receiver),
-      content: input.value
-    });
+      id_chat: Number(chatId),
+      content: messageText
+    };
+    socket.emit('chat message', msgObj);
     input.value = '';
   }
 });
 
 // Recibir mensaje en tiempo real
 socket.on('chat message', function (msg) {
-  // Solo muestra el mensaje si es entre estos dos usuarios
-  if (
-    (msg.sender == sender && msg.receiver == receiver) ||
-    (msg.sender == receiver && msg.receiver == sender)
-  ) {
+  if (msg.idChat == chatId || msg.id_chat == chatId) {
     const item = document.createElement('li');
-    item.textContent = msg.content;
-
-    // Si el mensaje fue enviado por mí, alinearlo a la derecha
-    if (msg.sender == sender) {
-      item.classList.add('self');
-    }
-
+    item.textContent = msg.content_message || msg.content;
+    if (msg.id_sender_user == sender || msg.sender == sender) item.classList.add('self');
     messages.appendChild(item);
-    window.scrollTo(0, document.body.scrollHeight);
+    scrollToBottom();
   }
 });
+
+// Modal para otorgar licencia
+document.getElementById('grant-license-btn').onclick = () => {
+  document.getElementById('grantLicenseModal').style.display = 'flex';
+};
+document.getElementById('cancelGrantBtn').onclick = () => {
+  document.getElementById('grantLicenseModal').style.display = 'none';
+};
+document.getElementById('confirmGrantBtn').onclick = async () => {
+  try {
+    const requester = (dataChat.chat.user1Id === sender) ? dataChat.chat.user2Id : dataChat.chat.user1Id;
+    const songId = dataChat.chat.songId || dataChat.chat.songid || dataChat.chat.id_song;
+
+    console.log('Enviando solicitud de licencia:', {
+      id_song: songId,
+      id_requester_user: requester,
+      status_license: 'approved'
+    });
+
+    const res = await fetch('/licenses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id_song: songId,
+        id_requester_user: requester,
+        status_license: 'approved'
+      })
+    });
+
+    const text = await res.text();
+    console.log('Respuesta de /chat/licenses:', text);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      alert('Error inesperado en el servidor');
+      return;
+    }
+
+    if (data.success) {
+      document.getElementById('grantLicenseModal').style.display = 'none';
+      document.getElementById('grant-license-btn').disabled = true;
+      showSuccessAlert('Licencia otorgada exitosamente');
+    } else {
+      alert('Error al otorgar la licencia: ' + (data.message || ''));
+    }
+  } catch (err) {
+    console.error('Error en confirmGrantBtn:', err);
+    alert('Error inesperado al otorgar la licencia');
+  }
+};
+
+// Scroll automático al final
+function scrollToBottom() {
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function showSuccessAlert(msg) {
+  const alertDiv = document.getElementById('alert-success');
+  alertDiv.textContent = msg;
+  alertDiv.style.display = 'block';
+  setTimeout(() => {
+    alertDiv.style.display = 'none';
+  }, 2500);
+}
+
+// ...dentro del if (data.success) del confirmGrantBtn:

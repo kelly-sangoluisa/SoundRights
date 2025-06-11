@@ -1,46 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <title>Chat SoundRights</title>
   <link rel="stylesheet" href="/chat.css">
 </head>
-
 <body>
   <div class="chat-container">
     <div id="chat-header">
       <button id="btn-back">Regresar</button>
       <div id="chat-title">Chat con [Nombre o Canción]</div>
-      <button id="btn-derechos">🎁 Dar derechos</button>
+      <button id="grant-license-btn" style="display:none; margin: 10px 0;">🎁 Dar derechos</button>
+      <!-- Modal bonito para confirmar -->
+      <div id="grantLicenseModal" class="modal">
+        <div class="modal-content">
+          <h3>¿Estás seguro de otorgar la licencia?</h3>
+          <p>Esto permitirá que el usuario use tu canción bajo licencia.</p>
+          <button id="confirmGrantBtn" class="modal-btn confirm">Sí, otorgar</button>
+          <button id="cancelGrantBtn" class="modal-btn cancel">Cancelar</button>
+        </div>
+      </div>
     </div>
-
     <ul id="messages"></ul>
     <form id="form" autocomplete="off">
       <input id="input" autocomplete="off" placeholder="Escribe tu mensaje..." required />
       <button>Enviar</button>
     </form>
   </div>
+  <div id="alert-success" class="alert-success" style="display:none;">
+  ¡Licencia otorgada exitosamente!
+  </div>
   <script>
-    // Obtiene el receiver de la URL
-    function getReceiverId() {
+    // Obtén el id_chat de la URL
+    function getChatId() {
       const params = new URLSearchParams(window.location.search);
-      return params.get('receiver');
+      return params.get('id_chat');
     }
-    window.receiverId = getReceiverId();
-    if (!window.receiverId) {
-      alert('No se encontró el usuario receptor.');
+    window.chatId = getChatId();
+    if (!window.chatId) {
+      alert('No se encontró el chat.');
       window.location.href = '/main';
     }
-
-    document.getElementById('chat-title').textContent = `Chat con ${window.receiverName}`;
     document.getElementById('btn-back').addEventListener('click', () => {
-      window.location.href = '/main'; // Cambia esta ruta si es necesario
+      window.location.href = '/main';
     });
-
   </script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/script.js"></script>
 </body>
-
 </html>
