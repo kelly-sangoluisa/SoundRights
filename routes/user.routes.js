@@ -57,6 +57,17 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// POST: logout (cierra sesión y limpia cookie)Add commentMore actions
+router.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ success: false, message: 'Error al cerrar sesión' });
+    }
+    res.clearCookie('connect.sid'); // Limpia la cookie de sesión
+    res.json({ success: true });
+  });
+});
+
 // GET: obtener pregunta de seguridad
 router.get('/forgot-password/question', async (req, res) => {
   const email = req.query.email_user;
@@ -83,7 +94,7 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
-//para uso del chat
+//para uso del chatAdd commentMore actions
 // GET: obtener usuario logueado
 router.get('/me', (req, res) => {
   if (!req.session || !req.session.user) {

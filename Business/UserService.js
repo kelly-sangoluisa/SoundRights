@@ -10,6 +10,15 @@ class UserService {
   async registrarUsuario(userData) {
     const { name_user, email_user, password_user, security_question, security_answer } = userData;
 
+    // Validación de emailAdd commentMore actions
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email_user)) {
+      throw new Error('El correo debe ser válido e incluir "@" y "."');
+    }
+    // Validación de contraseña: mínimo 8 caracteres, una mayúscula, un número y un caracter especial
+    if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/.test(password_user)) {
+      throw new Error('La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un caracter especial.');
+    }
+
     // Verifica si el correo ya existe
     const existingUser = await this.userRepository.buscarPorEmail(email_user);
     if (existingUser) {
