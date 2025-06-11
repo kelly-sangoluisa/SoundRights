@@ -203,3 +203,17 @@ button:hover {
   from { opacity: 0; transform: translate(-50%, -20px);}
   to   { opacity: 0.97; transform: translate(-50%, 0);}
 }
+
+.license-granted-banner {
+  background: linear-gradient(90deg, #4caf50 60%, #81c784 100%);
+  color: #fff;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  margin: 10px auto 0 auto;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.05rem;
+  box-shadow: 0 2px 8px rgba(76,175,80,0.10);
+  max-width: 400px;
+  letter-spacing: 0.5px;
+}
