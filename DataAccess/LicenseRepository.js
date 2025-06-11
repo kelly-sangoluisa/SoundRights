@@ -69,6 +69,15 @@ class LicenseRepository {
     );
     return result.rows.map(row => new License(row));
   }
+
+  static async findByUserAndSong(id_requester_user, id_song) {
+    const result = await pool.query(
+      `SELECT * FROM license_request WHERE id_requester_user = $1 AND id_song = $2`,
+      [id_requester_user, id_song]
+    );
+    return result.rows.map(row => new License(row));
+  }
+
 }
  
 module.exports = LicenseRepository;

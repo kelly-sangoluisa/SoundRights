@@ -39,6 +39,10 @@ class LicenseService {
   static async getLicensesBySong(id_song) {
     return await LicenseRepository.getBySong(id_song);
   }
+
+  static async getLicensesByUserAndSong(id_requester_user, id_song) {
+    return await LicenseRepository.findByUserAndSong(id_requester_user, id_song);
+  }
 }
  
 module.exports = LicenseService;
